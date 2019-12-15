@@ -1,9 +1,6 @@
 from Encoder.encode import *
 from IO.BitWriter import *
 from Encoder.HeaderEncoder import *
-from Encoder import HeaderEncoder
-import json
-import _pickle as pickle
 
 
 def generateCodes(huffman, codes, code=''):
@@ -20,14 +17,6 @@ def generateCodes(huffman, codes, code=''):
 def compress(inputpath, outputpath):
     c = HuffmanCode(inputpath)
     c.encode()
-    # f = open(outputpath, "w")
-    # print(c.reversecodes, file=f)
-    # f.close()
-    # f = open(outputpath,"a")
-    # f.write("<")
-    # headerEncode(f,c.huffman)
-    # f.write(">")
-    # f.close()
     headerWrite(c.huffman,outputpath)
     b = BitWriter(outputpath)
     for char in c.inputtext:
@@ -39,12 +28,6 @@ def compress(inputpath, outputpath):
 
 def decompress(inputpath,outputpath):
     f = open(inputpath, "rb")
-    # dict = ""
-    # while dict[-1:] != "}":
-    #     dict += f.read(1).decode()
-    # f.read(1) ## removes \n from compressed file
-    # codes = eval(dict)
-    # print(codes)
     codes = dict()
     huffman = headerReader(f)
     generateCodes(huffman,codes)
@@ -67,10 +50,6 @@ def decompress(inputpath,outputpath):
             code = ""
         code += char
 
-
-
-# compress("../IO/input.txt", "../IO/output.txt")
-# # decompress("../IO/output.txt")
 
 
 

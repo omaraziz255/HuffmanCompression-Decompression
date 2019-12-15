@@ -1,6 +1,5 @@
 class BitWriter:
     def __init__(self, filepath):
-        # open(filepath, "w").close()
         self.file = open(filepath, "ab")
         self.buffer = 0
         self.bitcount = 0
