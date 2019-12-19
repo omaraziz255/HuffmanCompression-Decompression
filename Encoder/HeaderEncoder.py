@@ -29,7 +29,7 @@ def headerReader(f):
         except UnicodeDecodeError:
             continue
 
-    r = r[:-1]
+    r = r[:-6]
     r = int.from_bytes(r, byteorder='big', signed=False)
     binary = bin(r)[2:]
     tree, i = headerDecode(binary)
