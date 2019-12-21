@@ -1,6 +1,4 @@
-from IO.FileManipulator import *
 from HuffmanCode.Huffman import *
-
 
 
 class HuffmanCode:
@@ -31,7 +29,7 @@ class HuffmanCode:
         self.huffman = huffman(chars)
         self.encoder(self.huffman)
         codePrinter(self.codes)
-        self.reversecodes = {v:k for k,v in self.codes.items()}
+        self.reversecodes = {v: k for k, v in self.codes.items()}
 
 
 def hasher(string):

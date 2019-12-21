@@ -14,6 +14,7 @@ def generateCodes(huffman, codes, code=''):
     generateCodes(huffman.left,codes, code + '0')
     generateCodes(huffman.right,codes, code + '1')
 
+
 def compress(inputpath, outputpath):
     c = HuffmanCode(inputpath)
     c.encode()
@@ -23,32 +24,43 @@ def compress(inputpath, outputpath):
         for bit in c.codes[char]:
             b.writeBit(bit)
     b.dumpBuffer()
-
+    f = open(outputpath, "a")
+    f.write("EOF")
+    f.close()
 
 
 def decompress(inputpath,outputpath):
     f = open(inputpath, "rb")
-    codes = dict()
-    huffman = headerReader(f)
-    generateCodes(huffman,codes)
-    codes = {v:k for k,v in codes.items()}
-    list = []
+    counter = 0
     while 1:
-        text = f.read(1)
-        if not text:
+        huffman = headerReader(f)
+        if huffman is None:
             break
-        list.append(ord(text))
-    bS = ""
-    for i in list:
-        bS += '{0:08b}'.format(i)
-    code = bS[0]
-    f = open(outputpath, "w")
-    f = open(outputpath, "a")
-    for char in bS[1:]:
-        if code in codes.keys():
-            f.write(codes[code])
-            code = ""
-        code += char
+        counter += 1
+        codes = dict()
+        generateCodes(huffman, codes)
+        codes = {v: k for k, v in codes.items()}
+        list = []
+        while 1:
+            text = f.read(1)
+            if not text:
+                break
+            list.append(ord(text))
+            if list[-3:] == [ord("E"), ord("O"), ord("F")]:
+                print("Decompression of " + outputpath+str(counter) + " is done")
+                list = list[:-3]
+                break
+        bS = ""
+        for i in list:
+            bS += '{0:08b}'.format(i)
+        code = bS[0]
+        open(outputpath+str(counter), "w").close()
+        file = open(outputpath+str(counter), "a")
+        for char in bS[1:]:
+            if code in codes.keys():
+                file.write(codes[code])
+                code = ""
+            code += char
 
 
 

@@ -19,3 +19,4 @@ class BitWriter:
     def dumpBuffer(self):
         self.file.write(self.buffer.to_bytes(1, byteorder='big', signed=False))
         self.buffer = self.bitcount = 0
+        self.file.close()

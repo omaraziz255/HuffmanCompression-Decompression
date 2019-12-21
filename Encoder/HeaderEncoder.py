@@ -5,10 +5,7 @@ import math
 def headerWrite(huffmanTree,outputpath):
     code, headerSize = headerEncode(huffmanTree, "")
     header = int(code,2)
-    f = open(outputpath, "w")
-    f.write("<")
-    f.close()
-    f = open(outputpath, "ab")
+    f = open(outputpath,"ab")
     headerSize = math.ceil(headerSize / 8)
     byte = header.to_bytes(headerSize, byteorder='big', signed=False)
     f.write(byte)
@@ -19,10 +16,16 @@ def headerWrite(huffmanTree,outputpath):
 
 
 def headerReader(f):
-    f.read(1)
     r = bytes()
+    test = f.read(1)
+    if test is None:
+        return None
+    else:
+        r += test
     while True:
         r += f.read(1)
+        if len(r) == 0:
+            return None
         try:
             if r[-6:].decode() == "header":
                 break
