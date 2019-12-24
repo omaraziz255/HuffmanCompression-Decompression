@@ -7,7 +7,12 @@ class HuffmanCode:
         self.reversecodes = dict()
         self. frequencies = dict()
         self.huffman = None
-        self.inputtext = open(inputpath, "r").read()
+        try:
+            self.inputtext = open(inputpath, "r").read()
+            self.binary = False
+        except UnicodeDecodeError:
+            self.inputtext = bytearray(open(inputpath, "rb").read())
+            self.binary = True
 
     def encoder(self, huffman_tree, code=''):
         if huffman_tree is None:
@@ -21,9 +26,12 @@ class HuffmanCode:
         self.encoder(huffman_tree.right, code+'1')
 
     def encode(self):
-        self.frequencies = hasher(self.inputtext)
+        if self.binary:
+            self.frequencies = hashBinary(self.inputtext)
+        else:
+            self.frequencies = hasher(self.inputtext)
         chars = []
-        for k,v in self.frequencies.items():
+        for k, v in self.frequencies.items():
             temp = HeapNode(k, v)
             chars.append(temp)
         self.huffman = huffman(chars)
@@ -35,6 +43,17 @@ class HuffmanCode:
 def hasher(string):
     hash_map = dict()
     for c in string:
+        if c in hash_map.keys():
+            hash_map[c] += 1
+        else:
+            hash_map[c] = 1
+    return hash_map
+
+
+def hashBinary(bytes):
+    hash_map = dict()
+    for b in bytes:
+        c = str(chr(b))
         if c in hash_map.keys():
             hash_map[c] += 1
         else:

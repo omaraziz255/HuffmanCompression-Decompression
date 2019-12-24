@@ -3,22 +3,29 @@ import os
 import time
 
 
-def compressFile(inputpath, outputpath):
+def compressFile(inputpath):
+    extension = inputpath[inputpath.find("."):]
+    outputpath = "Output/compressedFile" + extension
     open(outputpath, "w").close()
-    compress(inputpath, outputpath)
+    compress(inputpath,outputpath)
+    print("Compression Ratio = " + str(os.path.getsize(outputpath) / os.path.getsize(inputpath)))
 
 
-def compressFolder(inputpath, outputpath):
+def compressFolder(inputpath):
     directory = os.fsencode(inputpath)
+    outputpath = "Output/compressedFolder.txt"
     open(outputpath, "w").close()
+    inputsize = 0
     for file in os.listdir(directory):
         filename = inputpath + "/" + os.fsdecode(file)
-        compress(filename, outputpath)
+        inputsize += os.path.getsize(filename)
+        compress(filename,outputpath)
+    print("Compression Ratio = " + str(os.path.getsize(outputpath) / inputsize))
 
 
-def compressor(inputpath,outputpath):
+def compressor(inputpath):
     if os.path.isdir(inputpath):
-        compressFolder(inputpath, outputpath)
+        compressFolder(inputpath)
     else:
         try:
             f = open(inputpath, "r")
@@ -26,7 +33,8 @@ def compressor(inputpath,outputpath):
         except IOError:
             print("Invalid Input/Output File Path...Please Try again\n")
             prompt()
-        compressFile(inputpath, outputpath)
+            return
+        compressFile(inputpath)
 
 
 def prompt():
@@ -34,13 +42,12 @@ def prompt():
     choice = input("Would You Like To Compress Or Decompress This File: 1-Compress 2-Decompress\n")
     if choice == "1":
         start = time.time()
-        compressor(inputpath, "Output/compressed_output.txt")
+        compressor(inputpath)
         end = time.time()
-        print("Compression Ratio = " + str(os.path.getsize("Output/compressed_output.txt")/os.path.getsize(inputpath)))
         print("Execution time = " + str(end-start))
     elif choice == "2":
         start = time.time()
-        decompress(inputpath, "Output/decompressed_output.txt")
+        decompress(inputpath)
         end = time.time()
         print("Execution time = " + str(end-start))
     else:
@@ -48,4 +55,7 @@ def prompt():
         prompt()
 
 
+
+
 prompt()
+# decompressBinary("Output/compressed_output.txt", "Output/decompressed_output.txt")

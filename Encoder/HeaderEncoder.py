@@ -57,8 +57,6 @@ def headerEncode(huffmanTree, code, size = 0):
     return code, size
 
 
-#
-
 def headerDecode(binary, i=0):
     if i >= len(binary):
         return None, i
